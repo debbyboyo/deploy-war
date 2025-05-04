@@ -1,0 +1,31 @@
+---
+- name: Deploy WAR file from S3 to Tomcat
+  hosts: g1
+  become: yes
+  tasks:
+
+    - name: Create /tmp directory if it doesn't exist
+      file:
+        path: /tmp
+        state: directory
+        mode: '0755'
+
+    - name: Download WAR file from S3
+      shell: |
+        aws s3 cp s3://javacal12345/WebAppCal.0.0.1-SNAPSHOT.war /tmp/WebAppCal.0.0.1-SNAPSHOT.war
+      args:
+        executable: /bin/bash
+
+    - name: Copy WAR file to Tomcat webapps directory
+      copy:
+        src: /tmp/WebAppCal.0.0.1-SNAPSHOT.war
+        dest: /usr/share/tomcat/webapps/WebAppCal.0.0.1-SNAPSHOT.war
+        remote_src: yes
+        owner: tomcat
+        group: tomcat
+        mode: '0644'
+
+    - name: Restart Tomcat
+      service:
+        name: tomcat
+        state: restarted
