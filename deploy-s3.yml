@@ -8,14 +8,18 @@
       file:
         path: /tmp
         state: directory
+        mode: '0755'
 
     - name: Download WAR file from S3
       shell: aws s3 cp s3://javacal12345/WebAppCal.0.0.1-SNAPSHOT.war /tmp/WebAppCal.0.0.1-SNAPSHOT.war
       args:
-        warn: false
+        executable: /bin/bash
 
-    - name: Copy WAR to Tomcat webapps
+    - name: Copy WAR file to Tomcat webapps directory
       copy:
         src: /tmp/WebAppCal.0.0.1-SNAPSHOT.war
         dest: /home/ec2-user/apache-tomcat-7.0.94/webapps/WebAppCal.0.0.1-SNAPSHOT.war
         remote_src: yes
+        owner: ec2-user
+        group: ec2-user
+        mode: '0644'
