@@ -1,11 +1,17 @@
 ---
-- name: Install AWS CLI v2 using yum (Amazon Linux 2)
+- name: Install AWS CLI v2 on EC2 instances (Amazon Linux 2023 fix)
   hosts: g1
   become: true
 
   tasks:
-    - name: Install dependencies (yum)
-      yum:
+    - name: Remove curl-minimal if installed (conflicts with curl)
+      dnf:
+        name: curl-minimal
+        state: absent
+      ignore_errors: yes
+
+    - name: Install curl and unzip using dnf
+      dnf:
         name:
           - curl
           - unzip
