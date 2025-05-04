@@ -1,14 +1,14 @@
 ---
-- name: Install AWS CLI v2 on EC2 instances
+- name: Install AWS CLI v2 using yum (Amazon Linux 2)
   hosts: g1
-  become: yes
+  become: true
 
   tasks:
-    - name: Install unzip and curl (required dependencies)
+    - name: Install dependencies (yum)
       yum:
         name:
-          - unzip
           - curl
+          - unzip
         state: present
 
     - name: Download AWS CLI v2 installer
